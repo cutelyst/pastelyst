@@ -1,0 +1,47 @@
+<form method="post" class="form" role="form" action="/create" autocomplete="off">
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="form-group">
+        <input type="text" class="form-control" name="title" id="title" autofocus placeholder="Paste title">
+      </div>
+    </div>
+
+    <div class="col-md-offset-6 col-md-3">
+      <div class="form-group">
+        <select class="form-control" name="language">
+        {% for language in languages %}<option value="{{ language.id }}">{{ language.name }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="form-group">
+        <textarea class="form-control" rows="18" tabindex="2" placeholder="Paste data" cols="50" name="data"></textarea>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="private"> Submit privately
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-offset-4 col-md-2">
+      <div class="form-group">
+        <button type="submit" name="submit"  class="btn btn-default pull-right">Paste</button>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="form-group">
+        <select class="form-control" name="expire">
+        {% for expire in expires %}<option value="{{ expire.id }}">{{ expire.name }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+
+  </div>
+</form>
