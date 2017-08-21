@@ -36,7 +36,7 @@ public:
     void index(Context *c);
 
     C_ATTR(item, :Path :AutoArgs)
-    void item(Context *c, const QString &id);
+    void item(Context *c, const QString &uuid);
 
     C_ATTR(create, :Local :AutoArgs)
     void create(Context *c);

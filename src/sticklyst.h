@@ -34,6 +34,11 @@ public:
     bool init() override;
 
     virtual bool postFork() override;
+
+private:
+    bool createDB();
+
+    QString m_dbPath;
 };
 
 #endif //STICKLYST_H

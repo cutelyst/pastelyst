@@ -21,9 +21,14 @@
 #include "root.h"
 
 #include <Cutelyst/Plugins/View/Grantlee/grantleeview.h>
+#include <Cutelyst/Plugins/Utils/Sql>
 
-#include <QDebug>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QStandardPaths>
 #include <QFile>
+#include <QDebug>
 
 using namespace Cutelyst;
 
@@ -35,14 +40,23 @@ Sticklyst::~Sticklyst()
 {
 }
 
-#include <QElapsedTimer>
-
 bool Sticklyst::init()
 {
     new Root(this);
 
     bool production = config(QStringLiteral("production")).toBool();
     qDebug() << "Production" << production;
+
+    m_dbPath = config(QStringLiteral("DatabasePath"),
+                      QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + QLatin1String("/sticklyst.sqlite")).toString();
+    qDebug() << "Database" << m_dbPath;
+    if (!QFile::exists(m_dbPath)) {
+        if (!createDB()) {
+            qDebug() << "Failed to create databese" << m_dbPath;
+            return false;
+        }
+        QSqlDatabase::removeDatabase(QStringLiteral("db"));
+    }
 
     auto view = new GrantleeView(this);
     view->setIncludePaths({ pathTo(QStringLiteral("root/src")) });
@@ -55,6 +69,49 @@ bool Sticklyst::init()
 
 bool Sticklyst::postFork()
 {
+    auto db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), Cutelyst::Sql::databaseNameThread(QStringLiteral("sticklyst")));
+    db.setDatabaseName(m_dbPath);
+    if (!db.open()) {
+        qWarning() << "Failed to open database" << db.lastError().databaseText();
+        return false;
+    }
+    qDebug() << "Database ready" << db.connectionName();
 
+    return true;
+}
+
+bool Sticklyst::createDB()
+{
+    auto db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("db"));
+    db.setDatabaseName(m_dbPath);
+    if (!db.open()) {
+        qWarning() << "Failed to open database" << db.lastError().databaseText();
+        return false;
+    }
+
+    QSqlQuery query(db);
+    qDebug() << "Creating database" << m_dbPath;
+
+    bool ret = query.exec(QStringLiteral("PRAGMA journal_mode = WAL"));
+    qDebug() << "PRAGMA journal_mode = WAL" << ret << query.lastError().databaseText();
+
+    if (!query.exec(QStringLiteral("CREATE TABLE notes "
+                                   "( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
+                                   ", uuid TEXT NOT NULL UNIQUE "
+                                   ", title TEXT "
+                                   ", raw TEXT "
+                                   ", html TEXT "
+                                   ", definition TEXT "
+                                   ", ip_address TEXT "
+                                   ", user_agent TEXT "
+                                   ", private BOOL NOT NULL "
+                                   ", expires_at INTEGER "
+                                   ", created_at datetime NOT NULL "
+                                   ")"))) {
+        qCritical() << "Error creating database" << query.lastError().text();
+        return false;
+    }
+
+    return true;
 }
 

@@ -12,7 +12,7 @@ if(WIN32)
   endif()
 endif()
 
-find_package(Qt5 COMPONENTS Core Network Gui REQUIRED)
+find_package(Qt5 COMPONENTS Core Network Sql Gui REQUIRED)
 find_package(CutelystQt5 REQUIRED)
 find_package(KF5SyntaxHighlighting REQUIRED)
 

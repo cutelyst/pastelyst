@@ -16,6 +16,7 @@ target_link_libraries(Sticklyst
     Cutelyst::Utils::Sql
     Qt5::Core
     Qt5::Network
+    Qt5::Sql
     Qt5::Gui
 )
 
