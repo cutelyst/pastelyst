@@ -34,6 +34,7 @@ HtmlHighlighter::HtmlHighlighter() :
     m_repository(new Repository)
 {
     for (const Definition &def : m_repository->definitions()) {
+        m_languages.push_back(def.name());
         m_definitions.push_front({
                                      { QStringLiteral("id"), def.name() },
                                      { QStringLiteral("name"), def.translatedName() }
@@ -55,6 +56,11 @@ void HtmlHighlighter::printDefinitions()
     for (const Theme &theme : m_repository->themes()) {
         qDebug() << theme.name() << theme.translatedName();
     }
+}
+
+QStringList HtmlHighlighter::languages() const
+{
+    return m_languages;
 }
 
 DataList HtmlHighlighter::definitions() const

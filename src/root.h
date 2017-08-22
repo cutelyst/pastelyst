@@ -29,7 +29,7 @@ class Root : public Controller
     Q_OBJECT
     C_NAMESPACE("")
 public:
-    explicit Root(QObject *parent = 0);
+    explicit Root(HtmlHighlighter *htmlHighlighter, QObject *parent = 0);
     ~Root();
 
     C_ATTR(index, :Path :AutoArgs)
@@ -43,6 +43,8 @@ public:
 
     C_ATTR(create, :Local :AutoArgs)
     void create(Context *c);
+
+    static bool createNote(Context *c, HtmlHighlighter *htmlHighlighter, const ParamsMultiMap &params, QString &result);
 
     C_ATTR(all, :Local :AutoArgs)
     void all(Context *c);

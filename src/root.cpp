@@ -33,8 +33,8 @@
 
 using namespace Cutelyst;
 
-Root::Root(QObject *parent) : Controller(parent),
-    m_htmlHighlighter(new HtmlHighlighter)
+Root::Root(HtmlHighlighter *htmlHighlighter, QObject *parent) : Controller(parent),
+    m_htmlHighlighter(htmlHighlighter)
 {
 
 }
@@ -98,13 +98,21 @@ void Root::create(Context *c)
     }
 
     const ParamsMultiMap params = c->request()->bodyParams();
+    QString uuid;
+    createNote(c, m_htmlHighlighter, params, uuid);
+
+    c->res()->redirect(c->uriFor(CActionFor(QStringLiteral("item")), QStringList{ uuid }));
+}
+
+bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const ParamsMultiMap &params, QString &result)
+{
     const QString title = params.value(QStringLiteral("title"));
     const QString language = params.value(QStringLiteral("language"));
     const QString expire = params.value(QStringLiteral("expire"));
     const QString priv = params.value(QStringLiteral("private"));
 
     QString data = params.value(QStringLiteral("data"));
-    const QString dataHighlighted = m_htmlHighlighter->highlightString(language, QStringLiteral("Default"), &data);
+    const QString dataHighlighted = htmlHighlighter->highlightString(language, QStringLiteral("Default"), &data);
 
     int pos = 0;
     int count = 0;
@@ -143,11 +151,14 @@ void Root::create(Context *c)
     query.bindValue(QStringLiteral(":expires_at"), 3600);
     query.bindValue(QStringLiteral(":created_at"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
     if (query.exec() && query.numRowsAffected() == 1) {
-
+        qDebug() << "Created Paste" << uuid;
+        result = uuid;
+        return true;
     }
-    qDebug() << "Creating Paste" << uuid << query.lastError().databaseText();
+    result = query.lastError().databaseText();
+    qDebug() << "Failed Creating Paste" << uuid << result;
 
-    c->res()->redirect(c->uriFor(CActionFor(QStringLiteral("item")), QStringList{ uuid }));
+    return false;
 }
 
 void Root::all(Context *c)

@@ -38,6 +38,8 @@ public:
 
     void printDefinitions();
 
+    QStringList languages() const;
+
     DataList definitions() const;
 
     QString highlightString(const QString &definitionName, const QString &themeName, QString *data);
@@ -46,6 +48,7 @@ protected:
     void applyFormat(int offset, int length, const KSyntaxHighlighting::Format &format) override;
 
 private:
+    QStringList m_languages;
     QVector<QHash<QString, QString> > m_definitions;
     QTextStream m_out;
     QString m_currentLine;

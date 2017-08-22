@@ -19,6 +19,8 @@
 #include "sticklyst.h"
 
 #include "root.h"
+#include "apijson.h"
+#include "htmlhighlighter.h"
 
 #include <Cutelyst/Plugins/View/Grantlee/grantleeview.h>
 #include <Cutelyst/Plugins/Utils/Sql>
@@ -42,7 +44,9 @@ Sticklyst::~Sticklyst()
 
 bool Sticklyst::init()
 {
-    new Root(this);
+    auto htmlHighlighter = new HtmlHighlighter;
+    new Root(htmlHighlighter, this);
+    new ApiJson(htmlHighlighter, this);
 
     bool production = config(QStringLiteral("production")).toBool();
     qDebug() << "Production" << production;
