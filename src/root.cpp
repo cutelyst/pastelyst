@@ -21,6 +21,7 @@
 #include "htmlhighlighter.h"
 
 #include <Cutelyst/Plugins/Utils/Sql>
+#include <Cutelyst/Plugins/Utils/Pagination>
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -35,9 +36,7 @@ using namespace Cutelyst;
 Root::Root(QObject *parent) : Controller(parent),
     m_htmlHighlighter(new HtmlHighlighter)
 {
-    qDebug() << QUuid::createUuid().toRfc4122().toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals);
-    qDebug() << QUuid::createUuid().toRfc4122().toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals);
-    qDebug() << QUuid::createUuid().toRfc4122().toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals);
+
 }
 
 Root::~Root()
@@ -51,16 +50,43 @@ void Root::index(Context *c)
 
 void Root::item(Context *c, const QString &uuid)
 {
-    qDebug() << uuid << "uuid";
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
-                QStringLiteral("SELECT title, raw, html, definition, ip_address, user_agent, private, expires_at, created_at "
+                QStringLiteral("SELECT uuid, title, html, language, ip_address, user_agent, private, expires_at, created_at "
                                "FROM notes "
                                "WHERE uuid = :uuid"),
                 QStringLiteral("sticklyst"));
     query.bindValue(QStringLiteral(":uuid"), uuid);
-    if (query.exec()) {
-        qDebug() << "EXEC";
-        c->setStash(QStringLiteral("note"), Sql::queryToHashObject(query));
+    if (query.exec() && query.size()) {
+        QVariantHash obj = Sql::queryToHashObject(query);
+        QDateTime dt = QDateTime::fromString(obj.value(QStringLiteral("created_at")).toString(), Qt::ISODate);
+        dt.setTimeSpec(Qt::LocalTime);
+        obj.insert(QStringLiteral("created_at"), dt);
+        c->setStash(QStringLiteral("note"), obj);
+        qDebug() << "EXEC" << dt;
+    } else {
+        c->forward(CActionFor(QStringLiteral("notFound")));
+    }
+}
+
+void Root::raw(Context *c, const QString &uuid)
+{
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
+                QStringLiteral("SELECT uuid, title, raw, created_at "
+                               "FROM notes "
+                               "WHERE uuid = :uuid"),
+                QStringLiteral("sticklyst"));
+    query.bindValue(QStringLiteral(":uuid"), uuid);
+    if (query.exec() && query.next()) {
+        const QString raw = query.value(2).toString();
+        QDateTime dt = QDateTime::fromString(query.value(3).toString(), Qt::ISODate);
+        dt.setTimeSpec(Qt::LocalTime);
+
+        c->response()->headers().setLastModified(dt);
+        c->response()->setBody(raw);
+        c->response()->setContentType(QStringLiteral("text/plain; charset=UTF-8"));
+        qDebug() << "EXEC" << dt;
+    } else {
+        c->forward(CActionFor(QStringLiteral("notFound")));
     }
 }
 
@@ -73,33 +99,49 @@ void Root::create(Context *c)
 
     const ParamsMultiMap params = c->request()->bodyParams();
     const QString title = params.value(QStringLiteral("title"));
-    const QString definition = params.value(QStringLiteral("language"));
+    const QString language = params.value(QStringLiteral("language"));
     const QString expire = params.value(QStringLiteral("expire"));
     const QString priv = params.value(QStringLiteral("private"));
 
     QString data = params.value(QStringLiteral("data"));
-    const QString dataHighlighted = m_htmlHighlighter->highlightString(definition, QStringLiteral("Default"), &data);
+    const QString dataHighlighted = m_htmlHighlighter->highlightString(language, QStringLiteral("Default"), &data);
 
+    int pos = 0;
+    int count = 0;
+    while (pos != -1 && pos < dataHighlighted.size() && count < 6) {
+        pos = dataHighlighted.indexOf(QLatin1Char('\n'), pos + 1);
+        ++count;
+    }
+
+    QString shortHtml;
+    if (count == 6) {
+        shortHtml = dataHighlighted.mid(0, pos) + QLatin1String("\n</pre>");
+    } else {
+        shortHtml = dataHighlighted;
+    }
+
+    // LEFT must be greater than all sticklyst actions ie localhost/some_length_action
     const QString uuid = QString::fromLatin1(
                 QUuid::createUuid().toRfc4122()
-                .toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals).left(6));
+                .toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals).left(9));
 
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QStringLiteral("INSERT INTO notes "
-                               "(uuid, title, raw, html, definition, ip_address, user_agent, private, expires_at, created_at) "
+                               "(uuid, title, raw, html, short, language, ip_address, user_agent, private, expires_at, created_at) "
                                "VALUES "
-                               "(:uuid, :title, :raw, :html, :definition, :ip_address, :user_agent, :private, :expires_at, :created_at)"),
+                               "(:uuid, :title, :raw, :html, :short, :language, :ip_address, :user_agent, :private, :expires_at, :created_at)"),
                 QStringLiteral("sticklyst"));
     query.bindValue(QStringLiteral(":uuid"), uuid);
     query.bindValue(QStringLiteral(":title"), title);
     query.bindValue(QStringLiteral(":raw"), data);
     query.bindValue(QStringLiteral(":html"), dataHighlighted);
-    query.bindValue(QStringLiteral(":definition"), title);
+    query.bindValue(QStringLiteral(":short"), shortHtml);
+    query.bindValue(QStringLiteral(":language"), language);
     query.bindValue(QStringLiteral(":ip_address"), c->request()->addressString());
     query.bindValue(QStringLiteral(":user_agent"), c->request()->userAgent());
     query.bindValue(QStringLiteral(":private"), !priv.isEmpty());
     query.bindValue(QStringLiteral(":expires_at"), 3600);
-    query.bindValue(QStringLiteral(":created_at"), QDateTime::currentDateTimeUtc());
+    query.bindValue(QStringLiteral(":created_at"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
     if (query.exec() && query.numRowsAffected() == 1) {
 
     }
@@ -108,9 +150,53 @@ void Root::create(Context *c)
     c->res()->redirect(c->uriFor(CActionFor(QStringLiteral("item")), QStringList{ uuid }));
 }
 
-void Root::defaultPage(Context *c)
+void Root::all(Context *c)
 {
-    c->response()->body() = "Page not found!";
+    const int notesPerPage = 10;
+    int offset;
+
+    QSqlQuery query;
+    query = CPreparedSqlQueryThreadForDB(
+                QStringLiteral("SELECT count(*) FROM notes"),
+                QStringLiteral("sticklyst"));
+    if (Q_LIKELY(query.exec() && query.next())) {
+        int rows = query.value(0).toInt();
+        Pagination pagination(rows,
+                              notesPerPage,
+                              c->req()->queryParam(QStringLiteral("page"), QStringLiteral("1")).toInt());
+        offset = pagination.offset();
+        c->setStash(QStringLiteral("pagination"), pagination);
+        c->setStash(QStringLiteral("posts_count"), rows);
+    } else {
+        c->response()->redirect(c->uriFor(CActionFor(QStringLiteral("notFound"))));
+        return;
+    }
+
+    query = CPreparedSqlQueryThreadForDB(
+                QStringLiteral("SELECT uuid, title, short, language, ip_address, user_agent, private, expires_at, created_at "
+                               "FROM notes "
+                               "ORDER BY id DESC "
+                               "LIMIT :limit OFFSET :offset"),
+                QStringLiteral("sticklyst"));
+    query.bindValue(QStringLiteral(":limit"), notesPerPage);
+    query.bindValue(QStringLiteral(":offset"), offset);
+    if (query.exec()) {
+        QVariantList list = Sql::queryToHashList(query);
+        auto it = list.begin();
+        while (it != list.end()) {
+            QVariantHash obj = (*it).toHash();
+            QDateTime dt = QDateTime::fromString(obj.value(QStringLiteral("created_at")).toString(), Qt::ISODate);
+            dt.setTimeSpec(Qt::LocalTime);
+            obj.insert(QStringLiteral("created_at"), dt);
+            *it = obj;
+            ++it;
+        }
+        c->setStash(QStringLiteral("notes"), list);
+    }
+}
+
+void Root::notFound(Context *c)
+{
     c->response()->setStatus(404);
 }
 

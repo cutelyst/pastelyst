@@ -1,0 +1,22 @@
+{% for note in notes %}
+<h2>{% if note.title %}{{ note.title }}{% else %}Paste #{{ note.uuid }}{% endif %}
+<div class="btn-group pull-right" role="group" aria-label="...">
+  <a href="/{{ note.uuid }}" class="btn btn-default" role="button">Show Paste</a>
+</div>
+</h2>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    {{ note.short|safe }}
+  </div>
+  <div class="panel-footer">Posted by {{ note.ip_address }} at {{ note.created_at|date:"dd MMM yyyy, hh:mm:ss" }} <div class="pull-right">Language: {{ note.language }}</div></div>
+</div>
+{% endfor %}
+
+<ul class="pagination">
+  <li {% if not pagination.enable_first %}class="disabled"{% endif %}><a href="?page=1">&laquo;</a></li>
+  {% for page in pagination.pages %}
+    <li {% if page == pagination.current %}class="active"{% endif %}><a href="?page={{ page }}">{{ page }}</a></li>
+  {% endfor %}
+  <li {% if not pagination.enable_last %}class="disabled"{% endif %}><a href="?page={{ pagination.last_page }}">&raquo;</a></li>
+</ul>

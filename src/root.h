@@ -38,11 +38,17 @@ public:
     C_ATTR(item, :Path :AutoArgs)
     void item(Context *c, const QString &uuid);
 
+    C_ATTR(raw, :Local :AutoArgs)
+    void raw(Context *c, const QString &uuid);
+
     C_ATTR(create, :Local :AutoArgs)
     void create(Context *c);
 
-    C_ATTR(defaultPage, :Path)
-    void defaultPage(Context *c);
+    C_ATTR(all, :Local :AutoArgs)
+    void all(Context *c);
+
+    C_ATTR(notFound, :Path)
+    void notFound(Context *c);
 
 private:
     C_ATTR(End, :ActionClass("RenderView"))

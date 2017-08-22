@@ -1,10 +1,12 @@
-
+<h2>{% if note.title %}{{ note.title }}{% else %}Paste #{{ note.uuid }}{% endif %}
+<div class="btn-group pull-right" role="group" aria-label="...">
+  <a href="/raw/{{c.req.args}}" class="btn btn-info" role="button">RAW</a>
+</div>
+</h2>
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <div class="well">
     {{ note.html|safe }}
-    </div>
   </div>
-  <div class="panel-footer">Panel footer {{ note.title }}</div>
+  <div class="panel-footer">Posted by {{ note.ip_address }} at {{ note.created_at|date:"dd MMM yyyy, hh:mm:ss" }} <div class="pull-right">Language: {{ note.language }}</div></div>
 </div>
