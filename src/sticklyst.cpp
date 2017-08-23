@@ -115,7 +115,7 @@ bool Sticklyst::createDB()
                                    ", ip_address TEXT "
                                    ", user_agent TEXT "
                                    ", private BOOL NOT NULL "
-                                   ", expires_at INTEGER "
+                                   ", expires INTEGER "
                                    ", created_at datetime NOT NULL "
                                    ")"))) {
         qCritical() << "Error creating database" << query.lastError().text();

@@ -48,12 +48,13 @@ Root::~Root()
 void Root::index(Context *c)
 {
     c->setStash(QStringLiteral("languages"), QVariant::fromValue(m_htmlHighlighter->definitions()));
+    c->setStash(QStringLiteral("expires"), QVariant::fromValue(m_htmlHighlighter->expirations()));
 }
 
 void Root::item(Context *c, const QString &uuid)
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
-                QStringLiteral("SELECT uuid, title, html, language, ip_address, user_agent, private, expires_at, created_at, password "
+                QStringLiteral("SELECT uuid, title, html, language, ip_address, user_agent, private, expires, created_at, password "
                                "FROM notes "
                                "WHERE uuid = :uuid"),
                 QStringLiteral("sticklyst"));
@@ -140,9 +141,14 @@ bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const Params
 {
     const QString title = params.value(QStringLiteral("title"));
     const QString language = params.value(QStringLiteral("language"));
-    const QString expire = params.value(QStringLiteral("expire"));
     QString password = params.value(QStringLiteral("password"));
     const bool priv = params.value(QStringLiteral("private")) == QLatin1String("on") || !password.isEmpty();
+
+    const int expire = params.value(QStringLiteral("expire")).toInt();
+    if (!htmlHighlighter->expirationsVector().contains(expire)) {
+        result = QStringLiteral("Invalid expiration");
+        return false;
+    }
 
     if (!password.isEmpty()) {
         password = QString::fromLatin1(CredentialPassword::createPassword(password.toUtf8(),
@@ -176,10 +182,10 @@ bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const Params
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QStringLiteral("INSERT INTO notes "
                                "(uuid, title, raw, html, short, language, ip_address, "
-                               " user_agent, private, password, expires_at, created_at) "
+                               " user_agent, private, password, expires, created_at) "
                                "VALUES "
                                "(:uuid, :title, :raw, :html, :short, :language, :ip_address,"
-                               " :user_agent, :private, :password, :expires_at, :created_at)"),
+                               " :user_agent, :private, :password, :expires, :created_at)"),
                 QStringLiteral("sticklyst"));
     query.bindValue(QStringLiteral(":uuid"), uuid);
     query.bindValue(QStringLiteral(":title"), title);
@@ -191,7 +197,7 @@ bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const Params
     query.bindValue(QStringLiteral(":user_agent"), c->request()->userAgent());
     query.bindValue(QStringLiteral(":private"), priv);
     query.bindValue(QStringLiteral(":password"), password);
-    query.bindValue(QStringLiteral(":expires_at"), 3600);
+    query.bindValue(QStringLiteral(":expires"), expire);
     query.bindValue(QStringLiteral(":created_at"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
     if (query.exec() && query.numRowsAffected() == 1) {
         qDebug() << "Created Paste" << uuid;
@@ -227,7 +233,7 @@ void Root::all(Context *c)
     }
 
     query = CPreparedSqlQueryThreadForDB(
-                QStringLiteral("SELECT uuid, title, short, language, ip_address, user_agent, private, expires_at, created_at "
+                QStringLiteral("SELECT uuid, title, short, language, ip_address, user_agent, private, expires, created_at "
                                "FROM notes "
                                "WHERE private == 0 "
                                "ORDER BY id DESC "

@@ -42,14 +42,22 @@ public:
 
     DataList definitions() const;
 
+    DataList expirations() const;
+
+    QVector<int> expirationsVector() const;
+
     QString highlightString(const QString &definitionName, const QString &themeName, QString *data);
 
 protected:
     void applyFormat(int offset, int length, const KSyntaxHighlighting::Format &format) override;
 
 private:
+    void pushExpirations(const QString &seconds, const QString &text);
+
     QStringList m_languages;
-    QVector<QHash<QString, QString> > m_definitions;
+    DataList m_definitions;
+    DataList m_expirations;
+    QVector<int> m_expirationsVector;
     QTextStream m_out;
     QString m_currentLine;
     KSyntaxHighlighting::Repository *m_repository;

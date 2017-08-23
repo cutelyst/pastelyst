@@ -167,13 +167,10 @@ void ApiJson::list(Context *c, const QString &page)
 void ApiJson::parameterExpire(Context *c)
 {
     QJsonArray values;
-    values.append(1800);
-    values.append(21600);
-    values.append(86400);
-    values.append(604800);
-    values.append(2592000);
-    values.append(31536000);
-    values.append(0);
+    const QVector<int> expirations = m_htmlHighlighter->expirationsVector();
+    for (int value : expirations) {
+        values.push_back(value);
+    }
 
     QJsonObject result;
     result.insert(QStringLiteral("values"), values);

@@ -35,11 +35,19 @@ HtmlHighlighter::HtmlHighlighter() :
 {
     for (const Definition &def : m_repository->definitions()) {
         m_languages.push_back(def.name());
-        m_definitions.push_front({
-                                     { QStringLiteral("id"), def.name() },
-                                     { QStringLiteral("name"), def.translatedName() }
-                                 });
+        m_definitions.push_back({
+                                    { QStringLiteral("id"), def.name() },
+                                    { QStringLiteral("name"), def.translatedName() }
+                                });
     }
+
+    pushExpirations(QStringLiteral("1800"), QStringLiteral("for 30 minutes"));
+    pushExpirations(QStringLiteral("21600"), QStringLiteral("for 6 hours"));
+    pushExpirations(QStringLiteral("86400"), QStringLiteral("for 1 day"));
+    pushExpirations(QStringLiteral("604800"), QStringLiteral("for 1 week"));
+    pushExpirations(QStringLiteral("2592000"), QStringLiteral("for 1 month"));
+    pushExpirations(QStringLiteral("31536000"), QStringLiteral("for 1 year"));
+    pushExpirations(QStringLiteral("0"), QStringLiteral("forever"));
 }
 
 HtmlHighlighter::~HtmlHighlighter()
@@ -66,6 +74,16 @@ QStringList HtmlHighlighter::languages() const
 DataList HtmlHighlighter::definitions() const
 {
     return m_definitions;
+}
+
+DataList HtmlHighlighter::expirations() const
+{
+    return m_expirations;
+}
+
+QVector<int> HtmlHighlighter::expirationsVector() const
+{
+    return m_expirationsVector;
 }
 
 QString HtmlHighlighter::highlightString(const QString &definitionName, const QString &themeName, QString *data)
@@ -117,4 +135,13 @@ void HtmlHighlighter::applyFormat(int offset, int length, const KSyntaxHighlight
     if (!format.isDefaultTextStyle(currentTheme)) {
         m_out << QStringLiteral("</span>");
     }
+}
+
+void HtmlHighlighter::pushExpirations(const QString &seconds, const QString &text)
+{
+    m_expirationsVector.push_back(seconds.toInt());
+    m_expirations.push_back({
+                                 { QStringLiteral("id"), seconds },
+                                 { QStringLiteral("name"), text }
+                             });
 }
