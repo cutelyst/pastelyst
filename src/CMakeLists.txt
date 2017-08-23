@@ -15,6 +15,8 @@ target_link_libraries(Sticklyst
     Cutelyst::View::Grantlee
     Cutelyst::Utils::Sql
     Cutelyst::Utils::Pagination
+    Cutelyst::Authentication
+    Cutelyst::Session
     Qt5::Core
     Qt5::Network
     Qt5::Sql

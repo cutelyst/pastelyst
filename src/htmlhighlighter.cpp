@@ -78,7 +78,6 @@ QString HtmlHighlighter::highlightString(const QString &definitionName, const QS
     m_out.setString(&ret);
 
     State state;
-    m_out << QStringLiteral("<pre>\n");
 
     QTextStream in(data, QIODevice::ReadOnly);
     in.setCodec("UTF-8");
@@ -88,7 +87,6 @@ QString HtmlHighlighter::highlightString(const QString &definitionName, const QS
         m_out << QLatin1Char('\n');
     }
 
-    m_out << QStringLiteral("</pre>");
     m_out.reset();
 
     return ret;

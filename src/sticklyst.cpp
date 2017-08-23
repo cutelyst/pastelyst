@@ -24,6 +24,7 @@
 
 #include <Cutelyst/Plugins/View/Grantlee/grantleeview.h>
 #include <Cutelyst/Plugins/Utils/Sql>
+#include <Cutelyst/Plugins/Session/Session>
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -68,6 +69,8 @@ bool Sticklyst::init()
     view->setWrapper(QStringLiteral("wrapper.html"));
     view->setCache(production);
 
+    new Session(this);
+
     return true;
 }
 
@@ -107,6 +110,8 @@ bool Sticklyst::createDB()
                                    ", html TEXT "
                                    ", short TEXT "
                                    ", language TEXT "
+                                   ", password TEXT "
+                                   ", user_id INTEGER "
                                    ", ip_address TEXT "
                                    ", user_agent TEXT "
                                    ", private BOOL NOT NULL "
