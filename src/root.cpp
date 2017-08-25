@@ -38,7 +38,7 @@ using namespace Cutelyst;
 Root::Root(HtmlHighlighter *htmlHighlighter, QObject *parent) : Controller(parent),
     m_htmlHighlighter(htmlHighlighter)
 {
-
+    m_cleaupTimer.start();
 }
 
 Root::~Root()
@@ -262,3 +262,20 @@ void Root::notFound(Context *c)
     c->response()->setStatus(404);
 }
 
+void Root::cleanup()
+{
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
+                QStringLiteral("DELETE FROM notes WHERE expires > 0 AND strftime('%s','now') - strftime('%s', created_at) > expires"),
+                QStringLiteral("sticklyst"));
+    if (Q_UNLIKELY(!query.exec())) {
+        qWarning() << "Failed to cleanup database" << query.lastError().databaseText();
+    }
+}
+
+void Root::Auto(Context *)
+{
+    if (m_cleaupTimer.hasExpired(60 * 1000)) {
+        cleanup();
+        m_cleaupTimer.restart();
+    }
+}

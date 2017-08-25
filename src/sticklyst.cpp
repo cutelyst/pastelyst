@@ -82,7 +82,10 @@ bool Sticklyst::postFork()
         qWarning() << "Failed to open database" << db.lastError().databaseText();
         return false;
     }
+
     qDebug() << "Database ready" << db.connectionName();
+
+    Root::cleanup();
 
     return true;
 }

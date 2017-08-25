@@ -21,6 +21,8 @@
 
 #include <Cutelyst/Controller>
 
+#include <QElapsedTimer>
+
 using namespace Cutelyst;
 
 class HtmlHighlighter;
@@ -52,11 +54,18 @@ public:
     C_ATTR(notFound, :Path)
     void notFound(Context *c);
 
+    static void cleanup();
+
 private:
     C_ATTR(End, :ActionClass("RenderView"))
     void End(Context *c) { Q_UNUSED(c); }
 
+    C_ATTR(Auto, :Private)
+    void Auto(Context *c);
+
 private:
+
+    QElapsedTimer m_cleaupTimer;
     HtmlHighlighter *m_htmlHighlighter;
 };
 
