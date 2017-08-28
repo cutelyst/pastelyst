@@ -41,6 +41,16 @@ HtmlHighlighter::HtmlHighlighter() :
                                 });
     }
 
+    std::sort(m_definitions.begin(), m_definitions.end(), [] (const QHash<QString, QString> &a, const QHash<QString, QString> &b) -> bool {
+        return a.value(QStringLiteral("name")).compare(b.value(QStringLiteral("name")), Qt::CaseInsensitive) < 0;
+    });
+
+    m_languages.push_front(QStringLiteral("text"));
+    m_definitions.push_front({
+                                { QStringLiteral("id"), QStringLiteral("text") },
+                                { QStringLiteral("name"), QStringLiteral("Text") }
+                            });
+
     pushExpirations(QStringLiteral("1800"), QStringLiteral("for 30 minutes"));
     pushExpirations(QStringLiteral("21600"), QStringLiteral("for 6 hours"));
     pushExpirations(QStringLiteral("86400"), QStringLiteral("for 1 day"));

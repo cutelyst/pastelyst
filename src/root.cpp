@@ -157,7 +157,13 @@ bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const Params
     }
 
     QString data = params.value(QStringLiteral("data"));
-    const QString dataHighlighted = htmlHighlighter->highlightString(language, QStringLiteral("Default"), &data);
+
+    QString dataHighlighted;
+    if (language == QLatin1String("text")) {
+        dataHighlighted = data.toHtmlEscaped();
+    } else {
+        dataHighlighted = htmlHighlighter->highlightString(language, QStringLiteral("Default"), &data);
+    }
 
     int pos = 0;
     int count = 0;
