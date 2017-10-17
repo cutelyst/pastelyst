@@ -7,7 +7,7 @@
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <pre>{{ note.short|safe }}</pre>
+    <pre>{{ note.short }}</pre>
   </div>
   <div class="panel-footer">Posted by {{ note.ip_address }} at {{ note.created_at|date:"dd MMM yyyy, hh:mm:ss" }} <div class="pull-right">Language: {{ note.language }}</div></div>
 </div>

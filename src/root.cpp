@@ -25,6 +25,8 @@
 #include <Cutelyst/Plugins/Authentication/credentialpassword.h>
 #include <Cutelyst/Plugins/Session/Session>
 
+#include <grantlee/safestring.h>
+
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -91,6 +93,10 @@ void Root::item(Context *c, const QString &uuid)
     QDateTime dt = QDateTime::fromString(obj.value(QStringLiteral("created_at")).toString(), Qt::ISODate);
     dt.setTimeSpec(Qt::LocalTime);
     obj.insert(QStringLiteral("created_at"), dt);
+
+    const Grantlee::SafeString html(obj.value(QStringLiteral("html")).toString(), true);
+    obj.insert(QStringLiteral("html"), html);
+
     c->setStash(QStringLiteral("note"), obj);
 }
 
@@ -255,6 +261,10 @@ void Root::all(Context *c)
             QDateTime dt = QDateTime::fromString(obj.value(QStringLiteral("created_at")).toString(), Qt::ISODate);
             dt.setTimeSpec(Qt::LocalTime);
             obj.insert(QStringLiteral("created_at"), dt);
+
+            const Grantlee::SafeString shortHtml(obj.value(QStringLiteral("short")).toString(), true);
+            obj.insert(QStringLiteral("short"), shortHtml);
+
             *it = obj;
             ++it;
         }
