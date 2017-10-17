@@ -98,6 +98,7 @@ void Root::item(Context *c, const QString &uuid)
     obj.insert(QStringLiteral("html"), html);
 
     c->setStash(QStringLiteral("note"), obj);
+    c->setStash(QStringLiteral("title"), obj.value(QStringLiteral("title")));
 }
 
 void Root::raw(Context *c, const QString &uuid)
