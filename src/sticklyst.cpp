@@ -32,8 +32,11 @@
 #include <QStandardPaths>
 #include <QFile>
 #include <QDebug>
+#include <QMutexLocker>
 
 using namespace Cutelyst;
+
+static QMutex mutex;
 
 Sticklyst::Sticklyst(QObject *parent) : Application(parent)
 {
@@ -76,6 +79,8 @@ bool Sticklyst::init()
 
 bool Sticklyst::postFork()
 {
+    QMutexLocker locker(&mutex);
+
     auto db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), Cutelyst::Sql::databaseNameThread(QStringLiteral("sticklyst")));
     db.setDatabaseName(m_dbPath);
     if (!db.open()) {
