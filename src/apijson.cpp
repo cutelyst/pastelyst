@@ -226,3 +226,5 @@ void ApiJson::parameterTheme(Context *c)
 
     c->response()->setJsonBody(QJsonDocument(obj));
 }
+
+#include "moc_apijson.cpp"
