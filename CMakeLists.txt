@@ -1,9 +1,6 @@
-project(Sticklyst)
+cmake_minimum_required(VERSION 3.1)
 
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
-if (POLICY CMP0043)
-  cmake_policy(SET CMP0043 NEW)
-endif()
+project(Pastelyst LANGUAGES CXX)
 
 if(WIN32)
   if(MSVC)
@@ -22,13 +19,10 @@ set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-# Enable C++11 features
-add_definitions(-std=c++11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
     ${Cutelyst2Qt5_INCLUDE_DIR}
 )
 

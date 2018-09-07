@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017 Daniel Nicoletti <dantti12@gmail.com>              *
+ *   Copyright (C) 2017-2018 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -83,7 +83,7 @@ void ApiJson::show(Context *c, const QStringList &args)
                 QStringLiteral("SELECT title, raw, language, created_at, password "
                                "FROM notes "
                                "WHERE uuid = :uuid"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
     query.bindValue(QStringLiteral(":uuid"), uuid);
 
     QJsonObject result;
@@ -126,7 +126,7 @@ void ApiJson::list(Context *c, const QString &page)
     QSqlQuery query;
     query = CPreparedSqlQueryThreadForDB(
                 QStringLiteral("SELECT count(*) FROM notes WHERE private == 0"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
     int rows;
     if (Q_LIKELY(query.exec() && query.next())) {
         rows = query.value(0).toInt();
@@ -144,7 +144,7 @@ void ApiJson::list(Context *c, const QString &page)
                                "WHERE private == 0 "
                                "ORDER BY id DESC "
                                "LIMIT :limit OFFSET :offset"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
     query.bindValue(QStringLiteral(":limit"), notesPerPage);
     query.bindValue(QStringLiteral(":offset"), offset);
     if (query.exec()) {

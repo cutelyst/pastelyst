@@ -34,7 +34,7 @@ class HtmlHighlighter : public KSyntaxHighlighting::AbstractHighlighter
 {
 public:
     HtmlHighlighter();
-    ~HtmlHighlighter();
+    virtual ~HtmlHighlighter() override;
 
     void printDefinitions();
 

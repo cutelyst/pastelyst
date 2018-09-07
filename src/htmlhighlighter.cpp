@@ -102,7 +102,7 @@ QString HtmlHighlighter::highlightString(const QString &definitionName, const QS
     setTheme(m_repository->theme(themeName));
 
     QString ret;
-    ret.reserve(data->size() * 1.5);
+    ret.reserve(int(data->size() * 1.5));
     m_out.setString(&ret);
 
     State state;

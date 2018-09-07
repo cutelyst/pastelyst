@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017 Daniel Nicoletti <dantti12@gmail.com>              *
+ *   Copyright (C) 2017-2018 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,7 +16,7 @@
  *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
-#include "sticklyst.h"
+#include "pastelyst.h"
 
 #include "root.h"
 #include "apijson.h"
@@ -38,15 +38,15 @@ using namespace Cutelyst;
 
 static QMutex mutex;
 
-Sticklyst::Sticklyst(QObject *parent) : Application(parent)
+Pastelyst::Pastelyst(QObject *parent) : Application(parent)
 {
 }
 
-Sticklyst::~Sticklyst()
+Pastelyst::~Pastelyst()
 {
 }
 
-bool Sticklyst::init()
+bool Pastelyst::init()
 {
     auto htmlHighlighter = new HtmlHighlighter;
     new Root(htmlHighlighter, this);
@@ -56,7 +56,7 @@ bool Sticklyst::init()
     qDebug() << "Production" << production;
 
     m_dbPath = config(QStringLiteral("DatabasePath"),
-                      QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + QLatin1String("/sticklyst.sqlite")).toString();
+                      QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + QLatin1String("/pastelyst.sqlite")).toString();
     qDebug() << "Database" << m_dbPath;
     if (!QFile::exists(m_dbPath)) {
         if (!createDB()) {
@@ -77,11 +77,11 @@ bool Sticklyst::init()
     return true;
 }
 
-bool Sticklyst::postFork()
+bool Pastelyst::postFork()
 {
     QMutexLocker locker(&mutex);
 
-    auto db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), Cutelyst::Sql::databaseNameThread(QStringLiteral("sticklyst")));
+    auto db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), Cutelyst::Sql::databaseNameThread(QStringLiteral("pastelyst")));
     db.setDatabaseName(m_dbPath);
     if (!db.open()) {
         qWarning() << "Failed to open database" << db.lastError().databaseText();
@@ -95,7 +95,7 @@ bool Sticklyst::postFork()
     return true;
 }
 
-bool Sticklyst::createDB()
+bool Pastelyst::createDB()
 {
     auto db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("db"));
     db.setDatabaseName(m_dbPath);

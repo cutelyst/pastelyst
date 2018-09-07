@@ -1,15 +1,15 @@
-file(GLOB_RECURSE Sticklyst_SRCS *.cpp *.h)
+file(GLOB_RECURSE Pastelyst_SRCS *.cpp *.h)
 
-set(Sticklyst_SRCS
-    ${Sticklyst_SRCS}
+set(Pastelyst_SRCS
+    ${Pastelyst_SRCS}
     ${TEMPLATES_SRC}
 )
 
 # Create the application
-add_library(Sticklyst SHARED ${Sticklyst_SRCS})
+add_library(Pastelyst SHARED ${Pastelyst_SRCS})
 
 # Link to Cutelyst
-target_link_libraries(Sticklyst
+target_link_libraries(Pastelyst
     KF5::SyntaxHighlighting
     Cutelyst::Core
     Cutelyst::View::Grantlee

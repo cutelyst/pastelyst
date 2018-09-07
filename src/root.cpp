@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017 Daniel Nicoletti <dantti12@gmail.com>              *
+ *   Copyright (C) 2017-2018 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -59,7 +59,7 @@ void Root::item(Context *c, const QString &uuid)
                 QStringLiteral("SELECT uuid, title, html, language, ip_address, user_agent, private, expires, created_at, password "
                                "FROM notes "
                                "WHERE uuid = :uuid"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
 
     query.bindValue(QStringLiteral(":uuid"), uuid);
     if (!query.exec()) {
@@ -107,7 +107,7 @@ void Root::raw(Context *c, const QString &uuid)
                 QStringLiteral("SELECT uuid, title, raw, created_at, password "
                                "FROM notes "
                                "WHERE uuid = :uuid"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
     query.bindValue(QStringLiteral(":uuid"), uuid);
     if (query.exec() && query.next()) {
         const QString password = query.value(QStringLiteral("password")).toString();
@@ -186,7 +186,7 @@ bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const Params
         shortHtml = dataHighlighted;
     }
 
-    // LEFT must be greater than all sticklyst actions ie localhost/some_length_action
+    // LEFT must be greater than all pastelyst actions ie localhost/some_length_action
     const int left = priv ? 13 : 9;
     const QString uuid = QString::fromLatin1(
                 QUuid::createUuid().toRfc4122()
@@ -199,7 +199,7 @@ bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const Params
                                "VALUES "
                                "(:uuid, :title, :raw, :html, :short, :language, :ip_address,"
                                " :user_agent, :private, :password, :expires, :created_at)"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
     query.bindValue(QStringLiteral(":uuid"), uuid);
     query.bindValue(QStringLiteral(":title"), title);
     query.bindValue(QStringLiteral(":raw"), data);
@@ -231,7 +231,7 @@ void Root::all(Context *c)
     QSqlQuery query;
     query = CPreparedSqlQueryThreadForDB(
                 QStringLiteral("SELECT count(*) FROM notes WHERE private == 0"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
     if (Q_LIKELY(query.exec() && query.next())) {
         int rows = query.value(0).toInt();
         Pagination pagination(rows,
@@ -251,7 +251,7 @@ void Root::all(Context *c)
                                "WHERE private == 0 "
                                "ORDER BY id DESC "
                                "LIMIT :limit OFFSET :offset"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
     query.bindValue(QStringLiteral(":limit"), notesPerPage);
     query.bindValue(QStringLiteral(":offset"), offset);
     if (query.exec()) {
@@ -283,7 +283,7 @@ void Root::cleanup()
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QStringLiteral("DELETE FROM notes WHERE expires > 0 AND strftime('%s','now') - strftime('%s', created_at) > expires"),
-                QStringLiteral("sticklyst"));
+                QStringLiteral("pastelyst"));
     if (Q_UNLIKELY(!query.exec())) {
         qWarning() << "Failed to cleanup database" << query.lastError().databaseText();
     }

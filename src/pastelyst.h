@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017 Daniel Nicoletti <dantti12@gmail.com>              *
+ *   Copyright (C) 2017-2018 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,20 +16,20 @@
  *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
-#ifndef STICKLYST_H
-#define STICKLYST_H
+#ifndef PASTELYST_H
+#define PASTELYST_H
 
 #include <Cutelyst/Application>
 
 using namespace Cutelyst;
 
-class Sticklyst : public Application
+class Pastelyst : public Application
 {
     Q_OBJECT
-    CUTELYST_APPLICATION(IID "Sticklyst")
+    CUTELYST_APPLICATION(IID "Pastelyst")
 public:
-    Q_INVOKABLE explicit Sticklyst(QObject *parent = 0);
-    ~Sticklyst();
+    Q_INVOKABLE explicit Pastelyst(QObject *parent = nullptr);
+    virtual ~Pastelyst() override;
 
     bool init() override;
 
@@ -41,5 +41,5 @@ private:
     QString m_dbPath;
 };
 
-#endif //STICKLYST_H
+#endif //PASTELYST_H
 
