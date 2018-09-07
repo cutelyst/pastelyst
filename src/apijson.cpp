@@ -61,10 +61,9 @@ void ApiJson::create(Context *c)
         result.insert(QStringLiteral("error"), uuid);
     }
 
-    QJsonObject obj;
-    obj.insert(QStringLiteral("result"), result);
-
-    c->response()->setJsonBody(QJsonDocument(obj));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("result"), result},
+                                     });
 }
 
 void ApiJson::show(Context *c, const QStringList &args)
@@ -112,10 +111,9 @@ void ApiJson::show(Context *c, const QStringList &args)
         result.insert(QStringLiteral("error"), QStringLiteral("err_not_found"));
     }
 
-    QJsonObject obj;
-    obj.insert(QStringLiteral("result"), result);
-
-    c->response()->setJsonBody(QJsonDocument(obj));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("result"), result},
+                                     });
 }
 
 void ApiJson::list(Context *c, const QString &page)
@@ -153,15 +151,13 @@ void ApiJson::list(Context *c, const QString &page)
         }
     }
 
-    QJsonObject result;
-    result.insert(QStringLiteral("pastes"), pastes);
-    result.insert(QStringLiteral("count"), notesPerPage);
-    result.insert(QStringLiteral("pages"), rows / notesPerPage);
-
-    QJsonObject obj;
-    obj.insert(QStringLiteral("result"), result);
-
-    c->response()->setJsonBody(QJsonDocument(obj));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("result"), QJsonObject {
+                                              {QStringLiteral("pastes"), pastes},
+                                              {QStringLiteral("count"), notesPerPage},
+                                              {QStringLiteral("pages"), rows / notesPerPage},
+                                          }},
+                                     });
 }
 
 void ApiJson::parameterExpire(Context *c)
@@ -172,13 +168,11 @@ void ApiJson::parameterExpire(Context *c)
         values.push_back(value);
     }
 
-    QJsonObject result;
-    result.insert(QStringLiteral("values"), values);
-
-    QJsonObject obj;
-    obj.insert(QStringLiteral("result"), result);
-
-    c->response()->setJsonBody(QJsonDocument(obj));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("result"), QJsonObject{
+                                              {QStringLiteral("values"), values},
+                                          }},
+                                     });
 }
 
 void ApiJson::parameterLanguage(Context *c)
@@ -190,41 +184,33 @@ void ApiJson::parameterLanguage(Context *c)
         values.push_back(value);
     }
 
-    QJsonObject result;
-    result.insert(QStringLiteral("values"), values);
-
-    QJsonObject obj;
-    obj.insert(QStringLiteral("result"), result);
-
-    c->response()->setJsonBody(QJsonDocument(obj));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("result"), QJsonObject{
+                                              {QStringLiteral("values"), values},
+                                          }},
+                                     });
 }
 
 void ApiJson::parameterVersion(Context *c)
 {
-    QJsonArray values;
-    values.append(QCoreApplication::applicationVersion());
-
-    QJsonObject result;
-    result.insert(QStringLiteral("values"), values);
-
-    QJsonObject obj;
-    obj.insert(QStringLiteral("result"), result);
-
-    c->response()->setJsonBody(QJsonDocument(obj));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("result"), QJsonObject{
+                                              {QStringLiteral("values"), QJsonArray{
+                                                   QCoreApplication::applicationVersion(),
+                                               }},
+                                          }},
+                                     });
 }
 
 void ApiJson::parameterTheme(Context *c)
 {
-    QJsonArray values;
-    values.append(QStringLiteral("Default"));
-
-    QJsonObject result;
-    result.insert(QStringLiteral("values"), values);
-
-    QJsonObject obj;
-    obj.insert(QStringLiteral("result"), result);
-
-    c->response()->setJsonBody(QJsonDocument(obj));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("result"), QJsonObject{
+                                              {QStringLiteral("values"), QJsonArray{
+                                                   QStringLiteral("Default"),
+                                               }},
+                                          }},
+                                     });
 }
 
 #include "moc_apijson.cpp"
