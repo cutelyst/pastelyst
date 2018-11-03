@@ -136,12 +136,15 @@ void Root::create(Context *c)
     }
 
     const ParamsMultiMap params = c->request()->bodyParams();
-    QString uuid;
-    if (createNote(c, m_htmlHighlighter, params, uuid)) {
-        Session::setValue(c, uuid, true);
+    QString result;
+    if (createNote(c, m_htmlHighlighter, params, result)) {
+        Session::setValue(c, result, true);
+    } else {
+        c->res()->redirect(c->uriFor(actionFor(QStringLiteral("index"))));
+        return;
     }
 
-    c->res()->redirect(c->uriFor(CActionFor(QStringLiteral("item")), QStringList{ uuid }));
+    c->res()->redirect(c->uriFor(CActionFor(QStringLiteral("item")), QStringList{ result }));
 }
 
 bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const ParamsMultiMap &params, QString &result)
@@ -164,6 +167,10 @@ bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const Params
     }
 
     QString data = params.value(QStringLiteral("data"));
+    if (data.isEmpty()) {
+        result = QStringLiteral("Please post some content");
+        return false;
+    }
 
     QString dataHighlighted;
     if (language == QLatin1String("text")) {

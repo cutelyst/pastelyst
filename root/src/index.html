@@ -1,50 +1,57 @@
 <form method="post" class="form" role="form" action="/create" autocomplete="off">
 
-  <div class="row">
-    <div class="col-md-3">
+  <div class="row justify-content-between">
+    <div class="col-4">
       <div class="form-group">
         <input type="text" class="form-control" name="title" id="title" autofocus placeholder="Paste title">
       </div>
     </div>
 
-    <div class="col-md-offset-6 col-md-3">
+    <div class="col-4 align-self-end">
       <div class="form-group">
         <select class="form-control" name="language">
         {% for language in languages %}<option value="{{ language.id }}">{{ language.name }}</option>{% endfor %}
         </select>
       </div>
     </div>
+  </div>
 
-    <div class="col-md-12">
+  <div class="row">
+    <div class="col">
       <div class="form-group">
         <textarea class="form-control" rows="18" tabindex="2" placeholder="Paste data" cols="50" name="data"></textarea>
       </div>
     </div>
+  </div>
 
-    <div class="col-md-3">
+  <div class="row">
+    <div class="col-3">
       <div class="form-group">
         <div class="input-group">
-          <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
+          <div class="input-group-prepend">
+            <div class="input-group-text">🔒</div>
+          </div>
           <input type="password" class="form-control" name="password" id="password" autofocus placeholder="Password">
         </div>
       </div>
     </div>
 
-    <div class="col-md-3">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" name="private"> Submit privately
+    <div class="col-3">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" name="private">
+        <label class="form-check-label" for="defaultCheck1">
+          Submit privately
         </label>
       </div>
     </div>
 
-    <div class="col-md-offset-1 col-md-2">
+    <div class="col-2 offset-1">
       <div class="form-group">
-        <button type="submit" name="submit" class="btn btn-primary pull-right">Paste</button>
+        <button type="submit" name="submit" class="form-control btn btn-primary float-right">Paste</button>
       </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-3">
       <div class="form-group">
         <select class="form-control" name="expire">
         {% for expire in expires %}<option value="{{ expire.id }}">{{ expire.name }}</option>{% endfor %}

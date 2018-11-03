@@ -1,22 +1,27 @@
 {% for note in notes %}
 <h2>{% if note.title %}{{ note.title }}{% else %}Paste #{{ note.uuid }}{% endif %}
-<div class="btn-group pull-right" role="group" aria-label="...">
-  <a href="/{{ note.uuid }}" class="btn btn-default" role="button">Show Paste</a>
+<div class="float-right" role="group" aria-label="show paste">
+  <a href="/{{ note.uuid }}" class="btn btn-info" role="button">Show Paste</a>
 </div>
 </h2>
 
-<div class="panel panel-default">
-  <div class="panel-body">
+<div class="card">
+  <div class="card-body">
     <pre>{{ note.short }}</pre>
   </div>
-  <div class="panel-footer">Posted by {{ note.ip_address }} at {{ note.created_at|date:"dd MMM yyyy, hh:mm:ss" }} <div class="pull-right">Language: {{ note.language }}</div></div>
+  <div class="card-footer">Posted by {{ note.ip_address }} at {{ note.created_at|date:"dd MMM yyyy, hh:mm:ss" }} <div class="float-right">Language: {{ note.language }}</div></div>
 </div>
+
+<br>
+
 {% endfor %}
 
-<ul class="pagination">
-  <li {% if not pagination.enable_first %}class="disabled"{% endif %}><a href="?page=1">&laquo;</a></li>
-  {% for page in pagination.pages %}
-    <li {% if page == pagination.current %}class="active"{% endif %}><a href="?page={{ page }}">{{ page }}</a></li>
-  {% endfor %}
-  <li {% if not pagination.enable_last %}class="disabled"{% endif %}><a href="?page={{ pagination.last_page }}">&raquo;</a></li>
-</ul>
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li class="page-item{% if not pagination.enable_first %} disabled{% endif %}"><a class="page-link" href="?page=1">&laquo;</a></li>
+    {% for page in pagination.pages %}
+      <li class="page-item{% if page == pagination.current %} active{% endif %}"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+    {% endfor %}
+    <li class="page-item{% if not pagination.enable_last %} disabled{% endif %}"><a class="page-link" href="?page={{ pagination.last_page }}">&raquo;</a></li>
+  </ul>
+</nav>
