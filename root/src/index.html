@@ -31,14 +31,14 @@
           <div class="input-group-prepend">
             <div class="input-group-text">🔒</div>
           </div>
-          <input type="password" class="form-control" name="password" id="password" autofocus placeholder="Password">
+          <input type="password" class="form-control" name="password" id="password" autofocus placeholder="Password" disabled>
         </div>
       </div>
     </div>
 
     <div class="col-3">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="defaultCheck1" name="private">
+        <input class="form-check-input" type="checkbox" id="defaultCheck1" name="private" onchange="document.getElementById('password').disabled = !this.checked;">
         <label class="form-check-label" for="defaultCheck1">
           Submit privately
         </label>
