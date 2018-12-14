@@ -12,6 +12,7 @@ endif()
 find_package(Qt5 COMPONENTS Core Network Sql Gui REQUIRED)
 find_package(Cutelyst2Qt5 2.0.0 REQUIRED)
 find_package(KF5SyntaxHighlighting REQUIRED)
+find_package(Grantlee5 REQUIRED)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)

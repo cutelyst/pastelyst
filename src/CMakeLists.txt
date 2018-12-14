@@ -17,9 +17,9 @@ target_link_libraries(Pastelyst
     Cutelyst::Utils::Pagination
     Cutelyst::Authentication
     Cutelyst::Session
+    Grantlee5::Templates
     Qt5::Core
     Qt5::Network
     Qt5::Sql
     Qt5::Gui
 )
-
