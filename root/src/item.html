@@ -1,6 +1,8 @@
 <h2>{% if note.title %}{{ note.title }}{% else %}Paste #{{ note.uuid }}{% endif %}
 <div class="float-right" role="group" aria-label="RAW paste">
   <a href="/raw/{{c.req.args}}" class="btn btn-info" role="button">RAW</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u"+escape(window.location.href) onclick="window.open(this.href, 'newwindow', 'width=600, height=450'); return false;" class="btn btn-info" role="button">Facebook</a>
+  <a href="https://twitter.com/intent/tweet?text=" onclick="window.open(this.href+encodeURIComponent(window.location.href), 'newwindow', 'width=600, height=450'); return false;" class="btn btn-info" role="button">Tweet</a>
 </div>
 
 </h2>
