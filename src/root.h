@@ -46,6 +46,9 @@ public:
     C_ATTR(create, :Local :AutoArgs)
     void create(Context *c);
 
+    C_ATTR(search, :Local :AutoArgs)
+    void search(Context *c);
+
     static bool createNote(Context *c, HtmlHighlighter *htmlHighlighter, const ParamsMultiMap &params, QString &result);
 
     C_ATTR(all, :Local :AutoArgs)

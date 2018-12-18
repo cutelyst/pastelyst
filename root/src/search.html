@@ -1,0 +1,27 @@
+<style>
+.elide { white-space: nowrap; overflow:hidden; text-overflow:ellipsis; }
+</style>
+
+ <div class="row">
+ {% for note in notes %}
+        <div class="item  col-xs-3 col-lg-3">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4 class="group inner list-group-item-heading elide"><a href="/{{ note.uuid }}">{{ note.title }}</a></h4>
+                    <p class="group inner list-group-item-text elide">{{ note.short }}</p>
+                    <p class="group inner list-group-item-text elide">{{ note.language }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li class="page-item{% if not pagination.enable_first %} disabled{% endif %}"><a class="page-link" href="?page=1&q={{ search }}">&laquo;</a></li>
+    {% for page in pagination.pages %}
+      <li class="page-item{% if page == pagination.current %} active{% endif %}"><a class="page-link" href="?page={{ page }}&q={{ search }}">{{ page }}</a></li>
+    {% endfor %}
+    <li class="page-item{% if not pagination.enable_last %} disabled{% endif %}"><a class="page-link" href="?page={{ pagination.last_page }}&q={{ search }}">&raquo;</a></li>
+  </ul>
+</nav>
