@@ -280,6 +280,69 @@ void Root::all(Context *c)
     }
 }
 
+void Root::search(Context *c)
+{
+    const int notesPerPage = 10;
+    int offset;
+
+    QSqlQuery query;
+
+    QString searchText = c->req()->queryParam(QStringLiteral("q"));
+
+    query = CPreparedSqlQueryThreadForDB(
+                QStringLiteral("SELECT count(*) FROM notes WHERE private == 0 "
+                               "AND (title LIKE '%'||:search||'%' "
+                               "OR raw LIKE '%'||:search||'%') "),
+                QStringLiteral("pastelyst"));
+    // https://forum.qt.io/topic/78303/why-doesn-t-bind-work-with-this-query/8
+    query.bindValue(QStringLiteral(":search"), searchText);
+
+    if (Q_LIKELY(query.exec() && query.next())) {
+        int rows = query.value(0).toInt();
+        Pagination pagination(rows,
+                              notesPerPage,
+                              c->req()->queryParam(QStringLiteral("page"), QStringLiteral("1")).toInt());
+        offset = pagination.offset();
+        c->setStash(QStringLiteral("pagination"), pagination);
+        c->setStash(QStringLiteral("posts_count"), rows);
+        c->setStash(QStringLiteral("search"), searchText);
+    } else {
+        c->response()->redirect(c->uriFor(CActionFor(QStringLiteral("notFound"))));
+        return;
+    }
+
+    query = CPreparedSqlQueryThreadForDB(
+                QStringLiteral("SELECT uuid, title, raw, short, language, ip_address, user_agent, private, expires, created_at "
+                               "FROM notes "
+                               "WHERE private == 0 "
+                               "AND (title LIKE '%'||:search||'%' "
+                               "OR raw LIKE '%'||:search||'%') "
+                               "ORDER BY id DESC "
+                               "LIMIT :limit OFFSET :offset"),
+                QStringLiteral("pastelyst"));
+    query.bindValue(QStringLiteral(":search"), searchText);
+    query.bindValue(QStringLiteral(":limit"), notesPerPage);
+    query.bindValue(QStringLiteral(":offset"), offset);
+
+    if (query.exec()) {
+        QVariantList list = Sql::queryToHashList(query);
+        auto it = list.begin();
+        while (it != list.end()) {
+            QVariantHash obj = (*it).toHash();
+            QDateTime dt = QDateTime::fromString(obj.value(QStringLiteral("created_at")).toString(), Qt::ISODate);
+            dt.setTimeSpec(Qt::LocalTime);
+            obj.insert(QStringLiteral("created_at"), dt);
+
+            const Grantlee::SafeString shortHtml(obj.value(QStringLiteral("short")).toString(), true);
+            obj.insert(QStringLiteral("short"), shortHtml);
+
+            *it = obj;
+            ++it;
+        }
+        c->setStash(QStringLiteral("notes"), list);
+    }
+}
+
 void Root::notFound(Context *c)
 {
     c->setStash(QStringLiteral("template"), QStringLiteral("404.html"));
