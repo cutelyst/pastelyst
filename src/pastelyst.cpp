@@ -132,4 +132,3 @@ bool Pastelyst::createDB()
 
     return true;
 }
-

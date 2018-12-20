@@ -24,6 +24,7 @@
 #include <Cutelyst/Plugins/Utils/Pagination>
 #include <Cutelyst/Plugins/Authentication/credentialpassword.h>
 #include <Cutelyst/Plugins/Session/Session>
+#include <Cutelyst/Application>
 
 #include <grantlee/safestring.h>
 
@@ -55,14 +56,9 @@ void Root::index(Context *c)
 
 void Root::item(Context *c, const QString &uuid)
 {
-    // Some variables for optional features
-    bool socialMediaButtons = c->config(QStringLiteral("social"), true).toBool();
-    bool downloadButton = c->config(QStringLiteral("download"), false).toBool();
-    bool clipboardButton = c->config(QStringLiteral("clipboard"), true).toBool();
-
-    c->setStash(QStringLiteral("social"), socialMediaButtons);
-    c->setStash(QStringLiteral("download"), downloadButton);
-    c->setStash(QStringLiteral("clipboard"), clipboardButton);
+    c->setStash(QStringLiteral("social"), m_socialMediaButtons);
+    c->setStash(QStringLiteral("download"), m_downloadButton);
+    c->setStash(QStringLiteral("clipboard"), m_clipboardButton);
 
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QStringLiteral("SELECT uuid, title, html, language, ip_address, user_agent, private, expires, created_at, password "
@@ -374,4 +370,13 @@ void Root::Auto(Context *)
         cleanup();
         m_cleaupTimer.restart();
     }
+}
+
+bool Root::preFork(Application *app)
+{
+    m_socialMediaButtons = app->config(QStringLiteral("social"), true).toBool();
+    m_downloadButton = app->config(QStringLiteral("download"), true).toBool();
+    m_clipboardButton = app->config(QStringLiteral("clipboard"), true).toBool();
+
+    return true;
 }

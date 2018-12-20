@@ -59,6 +59,8 @@ public:
 
     static void cleanup();
 
+    virtual bool preFork(Application *app) override final;
+
 private:
     C_ATTR(End, :ActionClass("RenderView"))
     void End(Context *c) { Q_UNUSED(c); }
@@ -69,6 +71,9 @@ private:
 private:
     QElapsedTimer m_cleaupTimer;
     HtmlHighlighter *m_htmlHighlighter;
+    bool m_socialMediaButtons = 0;
+    bool m_downloadButton = 0;
+    bool m_clipboardButton = 0;
 };
 
 #endif //ROOT_H
