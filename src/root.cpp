@@ -37,11 +37,6 @@
 
 using namespace Cutelyst;
 
-// Some variables for optional features
-const bool socialMediaButtons = 1;
-const bool downloadButton = 1;
-const bool clipboardButton = 1;
-
 Root::Root(HtmlHighlighter *htmlHighlighter, QObject *parent) : Controller(parent),
     m_htmlHighlighter(htmlHighlighter)
 {
@@ -60,6 +55,11 @@ void Root::index(Context *c)
 
 void Root::item(Context *c, const QString &uuid)
 {
+    // Some variables for optional features
+    bool socialMediaButtons = c->config(QStringLiteral("social"), true).toBool();
+    bool downloadButton = c->config(QStringLiteral("download"), false).toBool();
+    bool clipboardButton = c->config(QStringLiteral("clipboard"), true).toBool();
+
     c->setStash(QStringLiteral("social"), socialMediaButtons);
     c->setStash(QStringLiteral("download"), downloadButton);
     c->setStash(QStringLiteral("clipboard"), clipboardButton);

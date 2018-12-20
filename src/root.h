@@ -67,10 +67,8 @@ private:
     void Auto(Context *c);
 
 private:
-
     QElapsedTimer m_cleaupTimer;
     HtmlHighlighter *m_htmlHighlighter;
 };
 
 #endif //ROOT_H
-
