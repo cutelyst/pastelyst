@@ -71,9 +71,9 @@ private:
 private:
     QElapsedTimer m_cleaupTimer;
     HtmlHighlighter *m_htmlHighlighter;
-    bool m_socialMediaButtons = 0;
-    bool m_downloadButton = 0;
-    bool m_clipboardButton = 0;
+    bool m_socialMediaButtons;
+    bool m_downloadButton;
+    bool m_clipboardButton;
 };
 
 #endif //ROOT_H
