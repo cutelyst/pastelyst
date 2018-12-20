@@ -37,6 +37,11 @@
 
 using namespace Cutelyst;
 
+// Some variables for optional features
+const bool socialMediaButtons = 1;
+const bool downloadButton = 1;
+const bool clipboardButton = 1;
+
 Root::Root(HtmlHighlighter *htmlHighlighter, QObject *parent) : Controller(parent),
     m_htmlHighlighter(htmlHighlighter)
 {
@@ -55,6 +60,10 @@ void Root::index(Context *c)
 
 void Root::item(Context *c, const QString &uuid)
 {
+    c->setStash(QStringLiteral("social"), socialMediaButtons);
+    c->setStash(QStringLiteral("download"), downloadButton);
+    c->setStash(QStringLiteral("clipboard"), clipboardButton);
+
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QStringLiteral("SELECT uuid, title, html, language, ip_address, user_agent, private, expires, created_at, password "
                                "FROM notes "

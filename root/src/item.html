@@ -1,15 +1,25 @@
 <h2>{% if note.title %}{{ note.title }}{% else %}Paste #{{ note.uuid }}{% endif %}
 <div class="float-right" role="group" aria-label="RAW paste">
   <a href="/raw/{{c.req.args}}" class="btn btn-info" role="button">RAW</a>
+  {% if download %}
+  <a href="/raw/{{c.req.args}}" class="btn btn-info" role="button" download>Download</a>
+  {% endif %}
+  {% if clipboard %}
+  <!--select() only works on <input> and <textarea> elements so we needs this:
+  https://stackoverflow.com/questions/25455567/how-can-i-select-a-paragraph-with-javascript-on-click -->
+  <button type="button" class="btn btn-info" onclick="var range = document.createRange();var selection = window.getSelection();range.selectNodeContents(document.getElementById('paste'));selection.removeAllRanges();selection.addRange(range);document.execCommand('copy');">Clipboard</button>
+  {% endif %}
+  {% if social %}
   <a href="https://www.facebook.com/sharer/sharer.php?u"+escape(window.location.href) onclick="window.open(this.href, 'newwindow', 'width=600, height=450'); return false;" class="btn btn-info" role="button">Facebook</a>
   <a href="https://twitter.com/intent/tweet?text=" onclick="window.open(this.href+encodeURIComponent(window.location.href), 'newwindow', 'width=600, height=450'); return false;" class="btn btn-info" role="button">Tweet</a>
+  {% endif %}
 </div>
 
 </h2>
 
 <div class="card">
   <div class="card-body">
-    <pre>{{ note.html }}</pre>
+    <pre id="paste">{{ note.html }}</pre>
   </div>
   <div class="card-footer">Posted by {{ note.ip_address }} at {{ note.created_at|date:"dd MMM yyyy, hh:mm:ss" }} <div class="float-right">Language: {{ note.language }}</div></div>
 </div>
