@@ -20,7 +20,7 @@ The list is short and the code is clean, go test, break, hack, and have fun!
 Create an INI file like pastelyst.conf with:
 
     [Cutelyst]
-    DataLocation = /var/tmp/my_site_data
+    DatabasePath = /var/tmp/my_site_data/pastelyst.sqlite
     production = true
 
     social = true
@@ -29,7 +29,7 @@ Create an INI file like pastelyst.conf with:
 
 Where:
 
- * DataLocation is the place where sqlite database will be placed
+ * DatabasePath is the place where sqlite database will be placed
  * production when true will preload the theme templates, which is a lot faster but if you are customizing the theme you will need to reload the process
  * social adds social media share buttons for pastes if enabled
  * download adds download button for pastes if enabled
