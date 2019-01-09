@@ -1,8 +1,8 @@
 # Pastelyst
 
-Pastelyst is an easy to use and expandable web paste tool built with [Cutelyst](https://github.com/cutelyst/cutelyst) and [KDE Frameworks 5 Syntax Highlighting](https://github.com/KDE/syntax-highlighting).
+Pastelyst is an easy to use and expandable web paste tool built with [Cutelyst](https://github.com/cutelyst/cutelyst) and [KDE Frameworks 5 Syntax Highlighting](https://github.com/KDE/syntax-highlighting). It uses less than 3 MB of RAM and renders quickly using a SQLite DB for the storage.
 
-Pastelyst is almost completed and on production at [paste.cutelyst.org](https://paste.cutelyst.org/). You can grab the code and deploy your own paste tool. And please don't forget to contribute to adding these missing features if you have time:
+Pastelyst is almost feature complete and on production at [paste.cutelyst.org](https://paste.cutelyst.org/). You can grab the code and deploy your own paste tool now. And please don't forget to contribute to adding these extra features if you have time:
 
  * Extra database support
  * URL shortener
@@ -40,6 +40,15 @@ You can run it with cutelyst-wsgi or uWSGI, both have similar command line optio
 
     cutelyst-wsgi2 --application path/to/libPastelyst.so --http-socket :3000 --ini pastelyst.conf --chdir parent_of_root_dir --static-map /static=root/static
 
-The chdir needs to point to the parent of the root directory that came from this project. The option --static-map is used to serve the static files.
+The chdir needs to point to the parent of the root directory that came from this project. The option `--static-map` is used to serve the static files.
 
-Now point your browser to http://localhost:3000
+Now point your browser to [http://localhost:3000](http://localhost:3000)
+
+## History
+Pastelyst was initially developed by Daniel Nicoletti and announced on August 25, 2017 on [cutelyst.org](https://cutelyst.org/2017/08/25/announcing-sticklyst-leveraging-kde-frameworks-on-the-web). Sticklyst, which was chosen as the project name, was later replaced by Pastelyst.
+
+It was inspired by [a Perl Catalyst application](http://paste.scsys.co.uk/) to benefit KDE Frameworks 5 Syntax Highlighting. Thanks to some helps from KDE community and Volker Krause it used without GUI widgets.
+
+- on 7 Sep 2018 Pastelyst 0.3.0 released
+- on 20 Mar 2018 Pastelyst 0.2.0 released
+- on 25 Aug 2017 Pastelyst 0.1.0 released
