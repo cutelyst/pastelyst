@@ -21,7 +21,7 @@
   <div class="row">
     <div class="col">
       <div class="form-group">
-        <textarea class="form-control" rows="18" tabindex="2" placeholder="Paste data" cols="50" name="data"></textarea>
+        <textarea class="form-control" rows="18" tabindex="2" placeholder="Paste data" cols="50" name="data" oninput="document.getElementById('submit').disabled = this.value==='';"></textarea>
       </div>
     </div>
   </div>
@@ -49,7 +49,7 @@
 
     <div class="col-2 offset-1">
       <div class="form-group">
-        <button type="submit" name="submit" class="form-control btn btn-primary float-right">Paste</button>
+        <button type="submit" id="submit" name="submit" class="form-control btn btn-primary float-right" disabled>Paste</button>
       </div>
     </div>
 

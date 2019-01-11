@@ -21,5 +21,5 @@ target_link_libraries(Pastelyst
     Qt5::Core
     Qt5::Network
     Qt5::Sql
-    Qt5::Gui
+    #Qt5::Gui
 )
