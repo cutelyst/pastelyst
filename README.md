@@ -44,6 +44,63 @@ The chdir needs to point to the parent of the root directory that came from this
 
 Now point your browser to [http://localhost:3000](http://localhost:3000)
 
+## API Usage Guidelines
+Pastelyst also provides an API. Using the API, you can create your own applications based on Pastelyst or use Pastelyst from terminal. For details see [Creating RESTful applications with Qt and Cutelyst](https://dantti.wordpress.com/2018/05/17/creating-restful-applications-with-qt-and-cutelyst/), [Understanding And Using REST APIs](https://www.smashingmagazine.com/2018/01/understanding-using-rest-api/), and [POST Form Data with cURL](https://davidwalsh.name/curl-post-file).
+
+### List pastes
+
+```bash
+curl -H "Content-Type: application/json" -X POST  https://paste.cutelyst.org/api/json/list/1
+```
+
+```json
+{"result":{"count":15,"pages":0,"pastes":["hW7BwGCNS","7B6G5HJNT","l_Zo9VaRT","f_9z4b-_T","YnsDOFIRR","pu0h5ftsT"
+```
+
+```bash
+curl -H "Content-Type: application/json" -X POST  https://paste.cutelyst.org/api/json/list/2
+```
+
+```json
+{"result":{"count":15,"pages":0,"pastes":[]}}
+```
+
+### Show pastes
+
+```bash
+curl -H "Content-Type: application/json" -X POST  https://paste.cutelyst.org/api/json/show/pu0h5ftsT
+```
+
+```json
+{"result":{"data":"#include <iostream>\r\n\r\nint main() {\r\n  std::cout << \"hello\\n\";\r\n  return 0;\r\n}","id":"pu0h5ftsT","language":"C++","timestamp":1503821618,"title":"Test"}}
+```
+
+```bash
+curl -H "Content-Type: application/json" -X POST  https://paste.cutelyst.org/api/json/show/STIdv05VREeht/1234567890
+```
+
+```json
+{"result":{"data":"my hidden text is here.","id":"STIdv05VREeht","language":"text","timestamp":1547050001,"title":"API test 1"}}
+```
+
+### Create pastes
+
+```bash
+curl -X POST http://localhost:3000/api/json/create -F 'data=echo "Hello World!"' -F 'language=Bash' -F 'title=API Test'
+```
+
+```json
+{"result":{"id":"m2TvYu2sQ"}}
+```
+
+```bash
+curl -X POST http://localhost:3000/api/json/create -F 'data=echo "Hello World!"' -F 'language=Bash' -F 'title=API Test' -F 'password=1234567890'
+```
+
+```json
+{"result":{"id":"tMQD52pdRCe3K"}}
+```
+
 ## History
 Pastelyst was initially developed by Daniel Nicoletti and announced on August 25, 2017 on [cutelyst.org](https://cutelyst.org/2017/08/25/announcing-sticklyst-leveraging-kde-frameworks-on-the-web). Sticklyst, which was chosen as the project name, was later replaced by Pastelyst.
 
