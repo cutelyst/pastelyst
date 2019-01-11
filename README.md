@@ -103,9 +103,3 @@ curl -X POST http://localhost:3000/api/json/create -F 'data=echo "Hello World!"'
 
 ## History
 Pastelyst was initially developed by Daniel Nicoletti and announced on August 25, 2017 on [cutelyst.org](https://cutelyst.org/2017/08/25/announcing-sticklyst-leveraging-kde-frameworks-on-the-web). Sticklyst, which was chosen as the project name, was later replaced by Pastelyst.
-
-It was inspired by [a Perl Catalyst application](http://paste.scsys.co.uk/) to benefit KDE Frameworks 5 Syntax Highlighting. Thanks to some helps from KDE community and Volker Krause it used without GUI widgets.
-
-- on 7 Sep 2018 Pastelyst 0.3.0 released
-- on 20 Mar 2018 Pastelyst 0.2.0 released
-- on 25 Aug 2017 Pastelyst 0.1.0 released
