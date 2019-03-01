@@ -10,7 +10,7 @@ if(WIN32)
 endif()
 
 find_package(Qt5 COMPONENTS Core Network Sql Gui REQUIRED)
-find_package(Cutelyst2Qt5 2.0.0 REQUIRED)
+find_package(Cutelyst2Qt5 2.7.0 REQUIRED)
 find_package(KF5SyntaxHighlighting REQUIRED)
 find_package(Grantlee5 REQUIRED)
 
@@ -22,10 +22,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-include_directories(
-    ${Cutelyst2Qt5_INCLUDE_DIR}
-)
 
 file(GLOB_RECURSE TEMPLATES_SRC root/*)
 
