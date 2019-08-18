@@ -22,6 +22,6 @@
     {% for page in pagination.pages %}
       <li class="page-item{% if page == pagination.current %} active{% endif %}"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
     {% endfor %}
-    <li class="page-item{% if not pagination.enableLast %} disabled{% endif %}"><a class="page-link" href="?page={{ pagination.last_page }}">&raquo;</a></li>
+    <li class="page-item{% if not pagination.enableLast %} disabled{% endif %}"><a class="page-link" href="?page={{ pagination.lastPage }}">&raquo;</a></li>
   </ul>
 </nav>
