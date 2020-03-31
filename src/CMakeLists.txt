@@ -12,14 +12,13 @@ add_library(Pastelyst SHARED ${Pastelyst_SRCS})
 target_link_libraries(Pastelyst
     KF5::SyntaxHighlighting
     Cutelyst::Core
-    Cutelyst::View::Grantlee
+    Cutelyst::View::Cutelee
     Cutelyst::Utils::Sql
     Cutelyst::Utils::Pagination
     Cutelyst::Authentication
     Cutelyst::Session
-    Grantlee5::Templates
+    Cutelee5::Templates
     Qt5::Core
     Qt5::Network
     Qt5::Sql
-    #Qt5::Gui
 )
