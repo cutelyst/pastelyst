@@ -22,7 +22,7 @@
 #include "apijson.h"
 #include "htmlhighlighter.h"
 
-#include <Cutelyst/Plugins/View/Grantlee/grantleeview.h>
+#include <Cutelyst/Plugins/View/Cutelee/cuteleeview.h>
 #include <Cutelyst/Plugins/Utils/Sql>
 #include <Cutelyst/Plugins/Session/Session>
 
@@ -66,7 +66,7 @@ bool Pastelyst::init()
         QSqlDatabase::removeDatabase(QStringLiteral("db"));
     }
 
-    auto view = new GrantleeView(this);
+    auto view = new CuteleeView(this);
     view->setIncludePaths({ pathTo(QStringLiteral("root/src")) });
     view->setTemplateExtension(QStringLiteral(".html"));
     view->setWrapper(QStringLiteral("wrapper.html"));

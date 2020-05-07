@@ -26,7 +26,7 @@
 #include <Cutelyst/Plugins/Session/Session>
 #include <Cutelyst/Application>
 
-#include <grantlee/safestring.h>
+#include <cutelee/safestring.h>
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -99,7 +99,7 @@ void Root::item(Context *c, const QString &uuid)
     dt.setTimeSpec(Qt::LocalTime);
     obj.insert(QStringLiteral("created_at"), dt);
 
-    const Grantlee::SafeString html(obj.value(QStringLiteral("html")).toString(), true);
+    const Cutelee::SafeString html(obj.value(QStringLiteral("html")).toString(), true);
     obj.insert(QStringLiteral("html"), html);
 
     c->setStash(QStringLiteral("note"), obj);
@@ -275,7 +275,7 @@ void Root::all(Context *c)
             dt.setTimeSpec(Qt::LocalTime);
             obj.insert(QStringLiteral("created_at"), dt);
 
-            const Grantlee::SafeString shortHtml(obj.value(QStringLiteral("short")).toString(), true);
+            const Cutelee::SafeString shortHtml(obj.value(QStringLiteral("short")).toString(), true);
             obj.insert(QStringLiteral("short"), shortHtml);
 
             *it = obj;
@@ -338,7 +338,7 @@ void Root::search(Context *c)
             dt.setTimeSpec(Qt::LocalTime);
             obj.insert(QStringLiteral("created_at"), dt);
 
-            const Grantlee::SafeString shortHtml(obj.value(QStringLiteral("short")).toString(), true);
+            const Cutelee::SafeString shortHtml(obj.value(QStringLiteral("short")).toString(), true);
             obj.insert(QStringLiteral("short"), shortHtml);
 
             *it = obj;
