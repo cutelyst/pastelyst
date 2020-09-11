@@ -22,3 +22,12 @@ target_link_libraries(Pastelyst
     Qt5::Network
     Qt5::Sql
 )
+
+install(TARGETS Pastelyst
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel
+)
+
+install(DIRECTORY ../root
+        DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/pastelyst
+)
