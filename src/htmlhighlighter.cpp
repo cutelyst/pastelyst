@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017-2019 Daniel Nicoletti <dantti12@gmail.com>              *
+ *   Copyright (C) 2017-2022 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,8 @@
 #include <KF5/KSyntaxHighlighting/Theme>
 #include <KF5/KSyntaxHighlighting/Definition>
 #include <KF5/KSyntaxHighlighting/Repository>
+
+#include <QIODevice>
 
 #include <QColor>
 
@@ -108,7 +110,7 @@ QString HtmlHighlighter::highlightString(const QString &definitionName, const QS
     State state;
 
     QTextStream in(data, QIODevice::ReadOnly);
-    in.setCodec("UTF-8");
+    in.setEncoding(QStringConverter::Utf8);
     while (!in.atEnd()) {
         m_currentLine = in.readLine();
         state = highlightLine(m_currentLine, state);

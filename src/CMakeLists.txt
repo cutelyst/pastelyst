@@ -10,17 +10,18 @@ add_library(Pastelyst SHARED ${Pastelyst_SRCS})
 
 # Link to Cutelyst
 target_link_libraries(Pastelyst
-    KF5::SyntaxHighlighting
+#    KF5::SyntaxHighlighting
+    KF5SyntaxHighlighting
     Cutelyst::Core
     Cutelyst::View::Cutelee
     Cutelyst::Utils::Sql
     Cutelyst::Utils::Pagination
     Cutelyst::Authentication
     Cutelyst::Session
-    Cutelee5::Templates
-    Qt5::Core
-    Qt5::Network
-    Qt5::Sql
+    Cutelee::Templates
+    Qt::Core
+    Qt::Network
+    Qt::Sql
 )
 
 install(TARGETS Pastelyst
