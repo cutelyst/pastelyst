@@ -68,13 +68,13 @@ void Root::item(Context *c, const QString &uuid)
 
     query.bindValue(QStringLiteral(":uuid"), uuid);
     if (!query.exec()) {
-        c->forward(CActionFor(QStringLiteral("notFound")));
+        c->forward(CActionFor(u"notFound"));
         return;
     }
 
     QVariantHash obj = Sql::queryToHashObject(query);
     if (obj.isEmpty()) {
-        c->forward(CActionFor(QStringLiteral("notFound")));
+        c->forward(CActionFor(u"notFound"));
         return;
     }
 
@@ -117,7 +117,7 @@ void Root::raw(Context *c, const QString &uuid)
     if (query.exec() && query.next()) {
         const QString password = query.value(QStringLiteral("password")).toString();
         if (!password.isEmpty() && Session::value(c, uuid).toBool() == false) {
-            c->response()->redirect(c->uriFor(CActionFor(QStringLiteral("item")), QStringList{ uuid }));
+            c->response()->redirect(c->uriFor(CActionFor(u"item"), QStringList{ uuid }));
             return;
         }
 
@@ -127,16 +127,16 @@ void Root::raw(Context *c, const QString &uuid)
 
         c->response()->headers().setLastModified(dt);
         c->response()->setBody(raw);
-        c->response()->setContentType(QStringLiteral("text/plain; charset=UTF-8"));
+        c->response()->setContentType("text/plain; charset=UTF-8");
     } else {
-        c->forward(CActionFor(QStringLiteral("notFound")));
+        c->forward(CActionFor(u"notFound"));
     }
 }
 
 void Root::create(Context *c)
 {
     if (!c->request()->isPost()) {
-        c->res()->redirect(c->uriFor(actionFor(QStringLiteral("index"))));
+        c->res()->redirect(c->uriFor(actionFor(u"index")));
         return;
     }
 
@@ -145,11 +145,11 @@ void Root::create(Context *c)
     if (createNote(c, m_htmlHighlighter, params, result)) {
         Session::setValue(c, result, true);
     } else {
-        c->res()->redirect(c->uriFor(actionFor(QStringLiteral("index"))));
+        c->res()->redirect(c->uriFor(actionFor(u"index")));
         return;
     }
 
-    c->res()->redirect(c->uriFor(CActionFor(QStringLiteral("item")), QStringList{ result }));
+    c->res()->redirect(c->uriFor(CActionFor(u"item"), QStringList{ result }));
 }
 
 bool Root::createNote(Context *c, HtmlHighlighter *htmlHighlighter, const ParamsMultiMap &params, QString &result)
@@ -253,7 +253,7 @@ void Root::all(Context *c)
         c->setStash(QStringLiteral("pagination"), pagination);
         c->setStash(QStringLiteral("posts_count"), rows);
     } else {
-        c->response()->redirect(c->uriFor(CActionFor(QStringLiteral("notFound"))));
+        c->response()->redirect(c->uriFor(CActionFor(u"notFound")));
         return;
     }
 
@@ -312,7 +312,7 @@ void Root::search(Context *c)
         c->setStash(QStringLiteral("posts_count"), rows);
         c->setStash(QStringLiteral("search"), searchText);
     } else {
-        c->response()->redirect(c->uriFor(CActionFor(QStringLiteral("notFound"))));
+        c->response()->redirect(c->uriFor(CActionFor(u"notFound")));
         return;
     }
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(Pastelyst VERSION 0.5.0 LANGUAGES CXX)
+project(Pastelyst VERSION 0.6.0 LANGUAGES CXX)
 
 if(WIN32)
   if(MSVC)
@@ -13,7 +13,7 @@ include(GNUInstallDirs)
 include(FetchContent)
 
 find_package(Qt6 COMPONENTS Core Network Sql Gui REQUIRED)
-find_package(Cutelyst3Qt6 3.4.0 REQUIRED)
+find_package(Cutelyst4Qt6 4.0.0 REQUIRED)
 #find_package(KF5SyntaxHighlighting REQUIRED)
 find_package(Cutelee6Qt6 REQUIRED)
 
@@ -30,7 +30,7 @@ set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 file(GLOB_RECURSE TEMPLATES_SRC root/*)
@@ -49,7 +49,7 @@ add_definitions(
     -DQT_NO_CAST_FROM_BYTEARRAY
     -DQT_USE_QSTRINGBUILDER
     -DQT_USE_FAST_OPERATOR_PLUS
-    -DQT_DISABLE_DEPRECATED_BEFORE=0x060000
+    -DQT_DISABLE_DEPRECATED_BEFORE=0x060200
 )
 
 if(UNIX)
