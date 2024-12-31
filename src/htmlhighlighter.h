@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017-2019 Daniel Nicoletti <dantti12@gmail.com>              *
+ *   Copyright (C) 2017-2024 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,7 +19,7 @@
 #ifndef HTMLHIGHLIGHTER_H
 #define HTMLHIGHLIGHTER_H
 
-#include <KF5/KSyntaxHighlighting/AbstractHighlighter>
+#include <KSyntaxHighlighting/AbstractHighlighter>
 
 #include <QTextStream>
 #include <QVector>

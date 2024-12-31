@@ -1,26 +1,22 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.16)
 
-project(Pastelyst VERSION 0.6.0 LANGUAGES CXX)
-
-if(WIN32)
-  if(MSVC)
-    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
-    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-  endif()
-endif()
+project(Pastelyst
+    VERSION 0.7.0
+    LANGUAGES CXX
+)
 
 include(GNUInstallDirs)
 include(FetchContent)
 
 find_package(Qt6 COMPONENTS Core Network Sql Gui REQUIRED)
-find_package(Cutelyst4Qt6 4.0.0 REQUIRED)
+find_package(Cutelyst5Qt6 5.0.0 REQUIRED)
 #find_package(KF5SyntaxHighlighting REQUIRED)
 find_package(Cutelee6Qt6 REQUIRED)
 
 FetchContent_Declare(
-  KF5SyntaxHighlighting
-  GIT_REPOSITORY https://invent.kde.org/frameworks/syntax-highlighting.git
-  GIT_TAG        598a9c4b # 5.92.0
+    KF5SyntaxHighlighting
+    GIT_REPOSITORY https://invent.kde.org/frameworks/syntax-highlighting.git
+    GIT_TAG        598a9c4b # 5.92.0
 )
 FetchContent_MakeAvailable(KF5SyntaxHighlighting)
 
@@ -49,7 +45,7 @@ add_definitions(
     -DQT_NO_CAST_FROM_BYTEARRAY
     -DQT_USE_QSTRINGBUILDER
     -DQT_USE_FAST_OPERATOR_PLUS
-    -DQT_DISABLE_DEPRECATED_BEFORE=0x060200
+    -DQT_DISABLE_DEPRECATED_BEFORE=0x060400
 )
 
 if(UNIX)

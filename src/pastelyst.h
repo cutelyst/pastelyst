@@ -29,11 +29,11 @@ class Pastelyst : public Application
     CUTELYST_APPLICATION(IID "Pastelyst")
 public:
     Q_INVOKABLE explicit Pastelyst(QObject *parent = nullptr);
-    virtual ~Pastelyst() override;
+    ~Pastelyst() override;
 
     bool init() override;
 
-    virtual bool postFork() override;
+    bool postFork() override;
 
 private:
     bool createDB();

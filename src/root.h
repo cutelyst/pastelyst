@@ -59,7 +59,7 @@ public:
 
     static void cleanup();
 
-    virtual bool preFork(Application *app) override final;
+    bool preFork(Application *app) override final;
 
 private:
     C_ATTR(End, :ActionClass("RenderView"))

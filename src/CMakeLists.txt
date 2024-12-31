@@ -10,7 +10,7 @@ add_library(Pastelyst SHARED ${Pastelyst_SRCS})
 
 # Link to Cutelyst
 target_link_libraries(Pastelyst
-#    KF5::SyntaxHighlighting
+   # KF5::SyntaxHighlighting
     KF5SyntaxHighlighting
     Cutelyst::Core
     Cutelyst::View::Cutelee
@@ -30,5 +30,12 @@ install(TARGETS Pastelyst
 )
 
 install(DIRECTORY ../root
-        DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/pastelyst
+    DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/pastelyst
+)
+
+add_custom_target(back
+    USES_TERMINAL
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E env QT_LOGGING_RULES='cutelyst.*=true'
+    cutelystd5-qt6 -a "\"$<TARGET_FILE:Pastelyst>\"" --h1 :3000 --static-map2 /static=root -M -r --lazy
 )

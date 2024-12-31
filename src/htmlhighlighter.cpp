@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017-2022 Daniel Nicoletti <dantti12@gmail.com>         *
+ *   Copyright (C) 2017-2024 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,11 +18,11 @@
  ***************************************************************************/
 #include "htmlhighlighter.h"
 
-#include <KF5/KSyntaxHighlighting/State>
-#include <KF5/KSyntaxHighlighting/Format>
-#include <KF5/KSyntaxHighlighting/Theme>
-#include <KF5/KSyntaxHighlighting/Definition>
-#include <KF5/KSyntaxHighlighting/Repository>
+#include <KSyntaxHighlighting/State>
+#include <KSyntaxHighlighting/Format>
+#include <KSyntaxHighlighting/Theme>
+#include <KSyntaxHighlighting/Definition>
+#include <KSyntaxHighlighting/Repository>
 
 #include <QIODevice>
 
@@ -55,11 +55,12 @@ HtmlHighlighter::HtmlHighlighter() :
 
     pushExpirations(QStringLiteral("1800"), QStringLiteral("for 30 minutes"));
     pushExpirations(QStringLiteral("21600"), QStringLiteral("for 6 hours"));
-    pushExpirations(QStringLiteral("86400"), QStringLiteral("for 1 day"));
-    pushExpirations(QStringLiteral("604800"), QStringLiteral("for 1 week"));
-    pushExpirations(QStringLiteral("2592000"), QStringLiteral("for 1 month"));
-    pushExpirations(QStringLiteral("31536000"), QStringLiteral("for 1 year"));
-    pushExpirations(QStringLiteral("0"), QStringLiteral("forever"));
+    // Thanks to spam we need to disable these
+    // pushExpirations(QStringLiteral("86400"), QStringLiteral("for 1 day"));
+    // pushExpirations(QStringLiteral("604800"), QStringLiteral("for 1 week"));
+    // pushExpirations(QStringLiteral("2592000"), QStringLiteral("for 1 month"));
+    // pushExpirations(QStringLiteral("31536000"), QStringLiteral("for 1 year"));
+    // pushExpirations(QStringLiteral("0"), QStringLiteral("forever"));
 }
 
 HtmlHighlighter::~HtmlHighlighter()
